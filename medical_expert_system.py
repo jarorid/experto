@@ -215,8 +215,12 @@ class Greetings(KnowledgeEngine):
 				max_disease = val
 		if_not_matched(max_disease)
 
+def main():
+	# Obtener la ruta del directorio actual
+	import os
+	current_dir = os.getcwd()
+	print(current_dir)
 
-if __name__ == "__main__":
 	preprocess()
 	engine = Greetings()
 	while(1):
@@ -226,3 +230,6 @@ if __name__ == "__main__":
 		if input() == "no":
 			exit()
 		#print(engine.facts)
+
+if __name__ == "__main__":
+	main()

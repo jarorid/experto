@@ -2,6 +2,8 @@ from flask import Flask
 from flask import jsonify
 from flask import request
 
+import medical_expert_system as expert_system
+
 app = Flask(__name__)
 app.debug = True
 
@@ -57,5 +59,13 @@ def json():
     return jsonify({"resultado": resultado})
 
 if __name__ == '__main__':
-    app.run()
+    # app.run()
+
+
+    
+    expert_system.main()
+
+
+
+    
 
