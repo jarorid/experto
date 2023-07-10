@@ -1,71 +1,133 @@
 from flask import Flask
+import subprocess
 from flask import jsonify
 from flask import request
+import asyncio
 
 import medical_expert_system as expert_system
 
 app = Flask(__name__)
-app.debug = True
 
 @app.route('/')
 def hello():
-    return 'Hello World'
+    preguntas = {
+        'headache': 'dolor de cabeza',
+        'back_pain': 'dolor de espalda',
+        'chest_pain': 'dolor en el pecho',
+        'cough': 'tos',
+        'fainting': 'desmayo',
+        'fatigue': 'fatiga',
+        'sunken_eyes': 'los ojos hundidos',
+        'low_body_temp': 'temperatura corporal baja',
+        'restlessness': 'intranquilidad',
+        'sore_throat': 'dolor de garganta',
+        'fever': 'fiebre',
+        'nausea': 'náuseas',
+        'blurred_vision': 'visión borrosa'
+    }
+    return jsonify(preguntas)
 
-
-@app.route('/mayusculas/<string:cadena>', methods=['GET'])
-def mayusculas(cadena): 
-    print (cadena)
-    cadena = cadena.upper()
-    print (cadena)
-    return jsonify({"resultado": cadena})
-
-
-
-@app.route('/sumar/<int:numero1>/<int:numero2>', methods=['GET'])
-def sumar(numero1, numero2):
-    suma = numero1 + numero2
-    print (suma)
-    return jsonify({"resultado": suma})
-
-
-@app.route('/json', methods=['POST'])
-def json():
-    """
-    Maneja una solicitud POST en la ruta '/json' para procesar datos JSON.
-
-    Se espera que la solicitud contenga datos JSON con la clave 'numero1'.
-    El valor asociado con 'numero1' se utiliza para calcular el resultado.
-
-    Returns:
-        flask.Response: La respuesta JSON que contiene el resultado calculado.
-
-    Example:
-        >>> # Enviar una solicitud POST con datos JSON: {"numero1": 10}
-        >>> # La respuesta esperada sería: {"resultado": 10}
-        >>> response = client.post('/json', json={"numero1": 10})
-        >>> print(response.json)
-        {"resultado": 10}
-        >>>
-        >>> # Ejemplo de solicitud cURL equivalente
-        >>> # Enviar una solicitud POST con datos JSON: {"numero1": 20}
-        >>> # La respuesta esperada sería: {"resultado": 20}
-        >>> curl_command = 'curl -X POST -H "Content-Type: application/json" -d \'{"numero1": 20}\' http://localhost:5000/json'
-        >>> response = subprocess.check_output(curl_command, shell=True, text=True)
-        >>> print(response)
-        {"resultado": 20}
-    """
+@app.route('/endpoint', methods=['POST'])
+def recibir_json():
     data = request.get_json()
-    resultado = data["numero1"]
-    return jsonify({"resultado": resultado})
+    if not data:
+        return jsonify({'error': 'JSON no encontrado'}), 400
+    
+    required_keys = [
+        'headache', 'back_pain', 'chest_pain', 'cough', 'fainting',
+        'fatigue', 'sunken_eyes', 'low_body_temp', 'restlessness',
+        'sore_throat', 'fever', 'sunken_eyes', 'nausea', 'blurred_vision'
+    ]
+    
+    if not all(key in data for key in required_keys):
+        return jsonify({'error': 'Estructura JSON no valida'}), 400
+    
+    valid_values = ['yes', 'no']
+    if any(data[key] not in valid_values for key in required_keys):
+        return jsonify({'error': 'Valores no validos en el JSON'}), 400
+    
+    response = expert_system.experto(data)
+    # print (response)
+    
+    return response, 400
+
 
 if __name__ == '__main__':
-    # app.run()
+    app.run(port=5000)
 
+'''Caso de prueba Hypotermia
 
-    
-    expert_system.main()
+curl -X POST -H "Content-Type: application/json" -d '{
+   "headache": "no",
+   "back_pain": "no",
+   "chest_pain": "no",
+   "cough": "no", 
+   "fainting": "yes",
+   "fatigue": "no", 
+   "sunken_eyes": "no",
+   "low_body_temp": "yes",
+   "restlessness": "no",
+   "sore_throat": "no",
+   "fever": "no", 
+   "sunken_eyes":"no",
+   "nausea": "no",
+   "blurred_vision": "no"
+}' http://localhost:5000/endpoint
 
+Caso de prueba sin match
 
+curl -X POST -H "Content-Type: application/json" -d '{
+   "headache": "no",
+   "back_pain": "no",
+   "chest_pain": "no",
+   "cough": "no", 
+   "fainting": "yes",
+   "fatigue": "no", 
+   "sunken_eyes": "no",
+   "low_body_temp": "no",
+   "restlessness": "no",
+   "sore_throat": "no",
+   "fever": "no", 
+   "sunken_eyes":"no",
+   "nausea": "no",
+   "blurred_vision": "no"
+}' http://localhost:5000/endpoint
 
-    
+Caso de prueba sin alguna llave
 
+curl -X POST -H "Content-Type: application/json" -d '{
+   "headache": "no",
+   "back_pain": "no",
+   "chest_pain": "no",
+   "cough": "no", 
+   "fatigue": "no", 
+   "sunken_eyes": "no",
+   "low_body_temp": "no",
+   "restlessness": "no",
+   "sore_throat": "no",
+   "fever": "no", 
+   "sunken_eyes":"no",
+   "nausea": "no",
+   "blurred_vision": "no"
+}' http://localhost:5000/endpoint
+
+Caso de prueba sin datos validos 
+
+curl -X POST -H "Content-Type: application/json" -d '{
+   "headache": "manzana",
+   "back_pain": "no",
+   "chest_pain": "no",
+   "cough": "no", 
+   "fainting": "yes",
+   "fatigue": "no", 
+   "sunken_eyes": "Hola Jahir",
+   "low_body_temp": "no",
+   "restlessness": "no",
+   "sore_throat": "no",
+   "fever": "no", 
+   "sunken_eyes":"no",
+   "nausea": "no",
+   "blurred_vision": "no"
+}' http://localhost:5000/endpoint
+
+'''
