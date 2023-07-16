@@ -4,26 +4,18 @@ from flask import jsonify
 from flask import request
 import asyncio
 
-import medical_expert_system as expert_system
+import software_development_expert_system as expert_system
 
 app = Flask(__name__)
 
 @app.route('/')
 def hello():
+    '''curl http://localhost:5000/'''
     preguntas = {
-        'headache': 'dolor de cabeza',
-        'back_pain': 'dolor de espalda',
-        'chest_pain': 'dolor en el pecho',
-        'cough': 'tos',
-        'fainting': 'desmayo',
-        'fatigue': 'fatiga',
-        'sunken_eyes': 'los ojos hundidos',
-        'low_body_temp': 'temperatura corporal baja',
-        'restlessness': 'intranquilidad',
-        'sore_throat': 'dolor de garganta',
-        'fever': 'fiebre',
-        'nausea': 'náuseas',
-        'blurred_vision': 'visión borrosa'
+        'object': '¿tiene declarado el objeto?',
+        'constructor': '¿tiene la función denominada constructor?',
+        'declaration': '¿Declaró los atributos y metodos del objeto?',
+        'instance': '¿Ya se encuentra instanciado el objeto?'
     }
     return jsonify(preguntas)
 
