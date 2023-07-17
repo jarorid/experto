@@ -65,18 +65,30 @@ class Greetings(KnowledgeEngine):
 	def _initial_action(self):
 		yield Fact(action="find_error")
 
-
 	@Rule(Fact(action='find_error'), NOT(Fact(objeto=W())),salience = 1)
 	def inference_0(self):
 		self.declare(Fact(objeto=self.dic_inference['objeto']))
+	
+	@Rule(Fact(action='find_error'), NOT(Fact(constructor=W())),salience = 1)
+	def inference_1(self):
+		self.declare(Fact(constructor=self.dic_inference['constructor']))
+	
+	@Rule(Fact(action='find_error'), NOT(Fact(atributoYmetodos=W())),salience = 1)
+	def inference_2(self):
+		self.declare(Fact(atributoYmetodos=self.dic_inference['atributoYmetodos']))
+	
+	@Rule(Fact(action='find_error'), NOT(Fact(instanciado=W())),salience = 1)
+	def inference_3(self):
+		self.declare(Fact(instanciado=self.dic_inference['instanciado']))
 
-	@Rule(Fact(action='find_error'),Fact(objeto="yes"))
+	@Rule(Fact(action='find_error'), Fact(objeto="yes"), Fact(constructor="no"), Fact(atributoYmetodos="no"), Fact(instanciado="no"))
 	def case_0(self):
 		print("Ingresa a Objeto")
 		self.declare(Fact(error="Objeto"))
 
-	@Rule(Fact(action='find_error'),Fact(objeto="no"))
+	@Rule(Fact(action='find_error'), Fact(objeto="no"), Fact(constructor="yes"), Fact(atributoYmetodos="no"), Fact(instanciado="no"))
 	def case_1(self):
+		print("Ingresa a NO Objeto")
 		self.declare(Fact(error="NoObjeto"))
 
 
@@ -92,16 +104,18 @@ class Greetings(KnowledgeEngine):
 		self.response_1 += "Los procedimientos sugeridos para corregir el error son:\n"
 		self.response_1 += solution + "\n"
 		
-
 	@Rule(Fact(action='find_error'),
 		  Fact(objeto=MATCH.objeto),
+		  Fact(constructor=MATCH.constructor),
+		  Fact(atributoYmetodos=MATCH.atributoYmetodos),
+		  Fact(instanciado=MATCH.instanciado),
 		  NOT(Fact(error=MATCH.error)),salience = -999)
 
 	
-	def not_matched(self,objeto):
+	def not_matched(self, objeto, constructor, atributoYmetodo, instanciado):
 		self.response_1 = ""
 		self.response_1 += "\n!!!!No se ha encontrado un error que tenga una coincidencia exacta.\n\nIntente descartar el siguiente caso.\n\n"
-		lis = [objeto]
+		lis = [objeto, constructor, atributoYmetodo, instanciado]
 		max_count = 0
 		max_inference = ""
 		for key,val in inference_map.items():
@@ -117,8 +131,6 @@ class Greetings(KnowledgeEngine):
 	
 
 def experto(dic_inference):
-	print('Inicia el programa')
-
 	preprocess()
 	engine = Greetings(dict_sintomas=dic_inference)
 	engine.reset()  # Prepare the engine for the execution.
@@ -131,12 +143,18 @@ if __name__ == "__main__":
 	
 	# error = "Objeto"
 	dic_inference = {
-		"objeto": "yes"
+		"objeto": "yes",
+		"constructor": "no",
+		"atributoYmetodos": "no",
+		"instanciado": "no"
 		}
 	
-	# # error = "No objeto"
-	# dic_inference = {
-	# 	"objeto": "no"
-	# 	}
+	# error = "No objeto"
+	dic_inference = {
+		"objeto": "no",
+		"constructor": "yes",
+		"atributoYmetodos": "no",
+		"instanciado": "no"
+		}
 
 	experto(dic_inference)
