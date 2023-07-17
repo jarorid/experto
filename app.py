@@ -26,7 +26,7 @@ def recibir_json():
         return jsonify({'error': 'JSON no encontrado'}), 400
     
     required_keys = [
-        'headache', 'back_pain', 'chest_pain', 'cough', 'fainting',
+        'object', 'back_pain', 'chest_pain', 'cough', 'fainting',
         'fatigue', 'sunken_eyes', 'low_body_temp', 'restlessness',
         'sore_throat', 'fever', 'sunken_eyes', 'nausea', 'blurred_vision'
     ]
@@ -50,7 +50,7 @@ if __name__ == '__main__':
 '''Caso de prueba Hypotermia
 
 curl -X POST -H "Content-Type: application/json" -d '{
-   "headache": "no",
+   "object": "no",
    "back_pain": "no",
    "chest_pain": "no",
    "cough": "no", 

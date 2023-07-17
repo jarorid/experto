@@ -1,0 +1,4 @@
+
+Descripción error porque falta declarar el objeto.
+
+.
