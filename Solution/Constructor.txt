@@ -1,4 +1,4 @@
-Solución error por falta declarar el NO objeto.
+Solución error por falta declarar el Constructor.
 
 Pasos para solucionar el error:
 

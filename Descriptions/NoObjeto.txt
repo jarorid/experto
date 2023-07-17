@@ -1,4 +1,0 @@
-
-Descripción error porque falta declarar el  NO objeto.
-
-.

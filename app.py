@@ -26,9 +26,10 @@ def recibir_json():
         return jsonify({'error': 'JSON no encontrado'}), 400
     
     required_keys = [
-        'object', 'back_pain', 'chest_pain', 'cough', 'fainting',
-        'fatigue', 'sunken_eyes', 'low_body_temp', 'restlessness',
-        'sore_throat', 'fever', 'sunken_eyes', 'nausea', 'blurred_vision'
+        "objeto",
+		"constructor",
+		"atributoYmetodos",
+		"instanciado"
     ]
     
     if not all(key in data for key in required_keys):
@@ -47,24 +48,14 @@ def recibir_json():
 if __name__ == '__main__':
     app.run(port=5000)
 
-'''Caso de prueba Hypotermia
+'''Caso de prueba Objeto
 
 curl -X POST -H "Content-Type: application/json" -d '{
-   "object": "no",
-   "back_pain": "no",
-   "chest_pain": "no",
-   "cough": "no", 
-   "fainting": "yes",
-   "fatigue": "no", 
-   "sunken_eyes": "no",
-   "low_body_temp": "yes",
-   "restlessness": "no",
-   "sore_throat": "no",
-   "fever": "no", 
-   "sunken_eyes":"no",
-   "nausea": "no",
-   "blurred_vision": "no"
-}' http://localhost:5000/endpoint
+		"objeto": "yes",
+		"constructor": "no",
+		"atributoYmetodos": "no",
+		"instanciado": "no"
+		}' http://localhost:5000/endpoint
 
 Caso de prueba sin match
 

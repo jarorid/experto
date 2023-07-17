@@ -1,0 +1,3 @@
+Descripción error porque falta declarar los Atributos y los Métodos.
+
+.

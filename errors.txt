@@ -1,2 +1,4 @@
 Objeto
-NoObjeto
+Constructor
+AtributoYmetodos
+Instanciado

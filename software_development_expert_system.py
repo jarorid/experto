@@ -83,13 +83,21 @@ class Greetings(KnowledgeEngine):
 
 	@Rule(Fact(action='find_error'), Fact(objeto="yes"), Fact(constructor="no"), Fact(atributoYmetodos="no"), Fact(instanciado="no"))
 	def case_0(self):
-		print("Ingresa a Objeto")
 		self.declare(Fact(error="Objeto"))
 
+	# Falla la prueba
 	@Rule(Fact(action='find_error'), Fact(objeto="no"), Fact(constructor="yes"), Fact(atributoYmetodos="no"), Fact(instanciado="no"))
 	def case_1(self):
-		print("Ingresa a NO Objeto")
-		self.declare(Fact(error="NoObjeto"))
+		self.declare(Fact(error="Constructor"))
+
+	# Falla la prueba
+	@Rule(Fact(action='find_error'), Fact(objeto="no"), Fact(constructor="no"), Fact(atributoYmetodos="yes"), Fact(instanciado="no"))
+	def case_1(self):
+		self.declare(Fact(error="AtributoYmetodos"))
+
+	@Rule(Fact(action='find_error'), Fact(objeto="no"), Fact(constructor="no"), Fact(atributoYmetodos="no"), Fact(instanciado="yes"))
+	def case_1(self):
+		self.declare(Fact(error="Instanciado"))
 
 
 	@Rule(Fact(action='find_error'),Fact(error=MATCH.error),salience = -998)
@@ -112,10 +120,10 @@ class Greetings(KnowledgeEngine):
 		  NOT(Fact(error=MATCH.error)),salience = -999)
 
 	
-	def not_matched(self, objeto, constructor, atributoYmetodo, instanciado):
+	def not_matched(self, objeto, constructor, atributoYmetodos, instanciado):
 		self.response_1 = ""
 		self.response_1 += "\n!!!!No se ha encontrado un error que tenga una coincidencia exacta.\n\nIntente descartar el siguiente caso.\n\n"
-		lis = [objeto, constructor, atributoYmetodo, instanciado]
+		lis = [objeto, constructor, atributoYmetodos, instanciado]
 		max_count = 0
 		max_inference = ""
 		for key,val in inference_map.items():
