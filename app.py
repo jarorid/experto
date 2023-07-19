@@ -8,17 +8,19 @@ import software_development_expert_system as expert_system
 
 app = Flask(__name__)
 
+#/pregunta/objeto
 @app.route('/')
 def hello():
     '''curl http://localhost:5000/'''
     preguntas = {
-        'object': '¿tiene declarado el objeto?',
+        'objecto': '¿tiene declarado el objeto?',
         'constructor': '¿tiene la función denominada constructor?',
         'declaration': '¿Declaró los atributos y metodos del objeto?',
         'instance': '¿Ya se encuentra instanciado el objeto?'
     }
     return jsonify(preguntas)
 
+#/respuesta/objeto
 @app.route('/endpoint', methods=['POST'])
 def recibir_json():
     data = request.get_json()
@@ -60,57 +62,27 @@ curl -X POST -H "Content-Type: application/json" -d '{
 Caso de prueba sin match
 
 curl -X POST -H "Content-Type: application/json" -d '{
-   "headache": "no",
-   "back_pain": "no",
-   "chest_pain": "no",
-   "cough": "no", 
-   "fainting": "yes",
-   "fatigue": "no", 
-   "sunken_eyes": "no",
-   "low_body_temp": "no",
-   "restlessness": "no",
-   "sore_throat": "no",
-   "fever": "no", 
-   "sunken_eyes":"no",
-   "nausea": "no",
-   "blurred_vision": "no"
-}' http://localhost:5000/endpoint
+		"objeto": "yes",
+		"constructor": "no",
+		"atributoYmetodos": "yes",
+		"instanciado": "no"
+		}' http://localhost:5000/endpoint
 
 Caso de prueba sin alguna llave
 
 curl -X POST -H "Content-Type: application/json" -d '{
-   "headache": "no",
-   "back_pain": "no",
-   "chest_pain": "no",
-   "cough": "no", 
-   "fatigue": "no", 
-   "sunken_eyes": "no",
-   "low_body_temp": "no",
-   "restlessness": "no",
-   "sore_throat": "no",
-   "fever": "no", 
-   "sunken_eyes":"no",
-   "nausea": "no",
-   "blurred_vision": "no"
-}' http://localhost:5000/endpoint
+		"objeto": "yes",
+		"constructor": "no",
+		"instanciado": "no"
+		}' http://localhost:5000/endpoint
 
 Caso de prueba sin datos validos 
 
 curl -X POST -H "Content-Type: application/json" -d '{
-   "headache": "manzana",
-   "back_pain": "no",
-   "chest_pain": "no",
-   "cough": "no", 
-   "fainting": "yes",
-   "fatigue": "no", 
-   "sunken_eyes": "Hola Jahir",
-   "low_body_temp": "no",
-   "restlessness": "no",
-   "sore_throat": "no",
-   "fever": "no", 
-   "sunken_eyes":"no",
-   "nausea": "no",
-   "blurred_vision": "no"
-}' http://localhost:5000/endpoint
+		"objeto": "manzana",
+		"constructor": "no",
+		"atributoYmetodos": "no",
+		"instanciado": "no"
+		}' http://localhost:5000/endpoint
 
 '''
